@@ -1,0 +1,19 @@
+system:
+  env: debug
+  addr: 8081
+mysql:
+  dns: root:@(127.0.0.1:3306)/lebron?charset=utf8mb4&parseTime=True&loc=Local
+  maxIdleConns: 30 # 空闲连接
+  maxOpenConns: 100 # 最大的并发打开连接数  MaxOpenConns >= maxIdleConns
+  connMaxIdleTime: 3600 #
+  connMaxLifetime: 0   # 连接可重用的最大时间长度
+redis:
+  host: 127.0.0.1
+  pass:
+  port: 6379
+  db: 1
+  idleTimeout: 10
+jwt:
+  issuer: gapi
+  ttl: 604800
+  secret: g0EiVz@TJvAX2MKq1LRhB6bFw3u8Zs5#H%e!pj
