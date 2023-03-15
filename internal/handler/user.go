@@ -40,3 +40,16 @@ func (h *user) CurrUser(ctx *gin.Context) {
 
 	response.WithData(currUser).JsonOutput()
 }
+
+// Logout 获取登录信息
+func (h *user) Logout(ctx *gin.Context) {
+	response := utils.NewResponse(ctx)
+
+	err := service.NewUserService(ctx).HandleLogout()
+	if err != nil {
+		response.WithCode(consts.ErrInternalCode).WithMsg(err).JsonOutput()
+		return
+	}
+
+	response.JsonOutput()
+}

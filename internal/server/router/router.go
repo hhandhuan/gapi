@@ -17,6 +17,7 @@ func RegisterRouter(engine *gin.Engine) {
 		group.Use(token())
 		{
 			group.GET("curr-user", handler.User.CurrUser)
+			group.POST("logout", handler.User.Logout)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"gapi/pkg/conf"
 	"gapi/pkg/consts"
@@ -17,7 +18,8 @@ type Result struct {
 }
 
 func (result *Result) String() string {
-	return fmt.Sprintf("%#v", result)
+	by, _ := json.Marshal(result)
+	return fmt.Sprintf("%#v", string(by))
 }
 
 func NewResponse(context *gin.Context) *Response {

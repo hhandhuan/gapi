@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"gapi/internal/consts"
 	"gapi/internal/utils"
 	"gapi/pkg/conf"
+	"gapi/pkg/redis"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +24,13 @@ func token() gin.HandlerFunc {
 
 		claim, err := utils.NewJwt(conf.GetConfig().Jwt).ParseJwtToken(parts[1])
 		if err != nil {
+			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoAuthFailedErr).JsonOutput()
+			ctx.Abort()
+			return
+		}
+
+		val := redis.Client.Get(context.Background(), claim.ID).Val()
+		if len(val) > 0 {
 			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoAuthFailedErr).JsonOutput()
 			ctx.Abort()
 			return
