@@ -1,7 +1,7 @@
 package router
 
 import (
-	"zhengze/internal/handler"
+	"gapi/internal/handler"
 
 	"github.com/gin-gonic/gin"
 )

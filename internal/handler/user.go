@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"zhengze/internal/consts"
-	"zhengze/internal/entity"
-	"zhengze/internal/service"
-	"zhengze/internal/utils"
+	"gapi/internal/consts"
+	"gapi/internal/entity"
+	"gapi/internal/service"
+	"gapi/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )

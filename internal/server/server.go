@@ -2,9 +2,9 @@ package server
 
 import (
 	"context"
+	"gapi/internal/server/router"
+	"gapi/pkg/conf"
 	"net/http"
-	"zhengze/internal/server/router"
-	"zhengze/pkg/conf"
 
 	"github.com/gin-gonic/gin"
 )

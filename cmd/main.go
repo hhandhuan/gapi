@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
+	"gapi/internal/server"
+	"gapi/pkg/conf"
+	"gapi/pkg/consts"
+	"gapi/pkg/mysql"
+	"gapi/pkg/redis"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"zhengze/internal/server"
-	"zhengze/pkg/conf"
-	"zhengze/pkg/consts"
-	"zhengze/pkg/mysql"
-	"zhengze/pkg/redis"
 )
 
 func init() {

@@ -1,9 +1,9 @@
 package mysql
 
 import (
+	"gapi/pkg/conf"
 	"log"
 	"time"
-	"zhengze/pkg/conf"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -48,7 +48,7 @@ func getConn(c *conf.Mysql) (gdb *gorm.DB, err error) {
 
 	db.SetMaxIdleConns(c.MaxIdleConns)
 	db.SetConnMaxIdleTime(time.Second * time.Duration(c.ConnMaxIdleTime))
-	
+
 	db.SetMaxOpenConns(c.MaxOpenConns)
 	db.SetConnMaxLifetime(time.Second * time.Duration(c.ConnMaxLifetime))
 

@@ -2,7 +2,9 @@ package conf
 
 import (
 	"flag"
-	"zhengze/pkg/utils"
+	"gopkg.in/yaml.v3"
+	"io/ioutil"
+	"log"
 )
 
 type Jwt struct {
@@ -48,7 +50,12 @@ var (
 
 func init() {
 	flag.Parse()
-	utils.YamlToStruct(*cPath, config)
+	var buf []byte
+	buf, err := ioutil.ReadFile(*cPath)
+	if err != nil {
+		log.Fatalf("read file error: %v", err)
+	}
+	err = yaml.Unmarshal(buf, config)
 }
 
 func GetConfig() *Config {

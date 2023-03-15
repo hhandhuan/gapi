@@ -1,7 +1,7 @@
 package model
 
 import (
-	"zhengze/pkg/mysql"
+	"gapi/pkg/mysql"
 
 	"gorm.io/gorm"
 )

@@ -1,10 +1,10 @@
 package router
 
 import (
+	"gapi/internal/consts"
+	"gapi/internal/utils"
+	"gapi/pkg/conf"
 	"strings"
-	"zhengze/internal/consts"
-	"zhengze/internal/utils"
-	"zhengze/pkg/conf"
 
 	"github.com/gin-gonic/gin"
 )

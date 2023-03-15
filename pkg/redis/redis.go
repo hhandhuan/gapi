@@ -3,10 +3,10 @@ package redis
 import (
 	"context"
 	"fmt"
+	"gapi/pkg/conf"
 	"github.com/go-redis/redis/v8"
 	"github.com/gogf/gf/v2/util/gconv"
 	"log"
-	"zhengze/pkg/conf"
 )
 
 var Client *redis.Client

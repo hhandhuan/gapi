@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"gapi/internal/consts"
+	"gapi/internal/utils"
 	"github.com/gin-gonic/gin"
-	"zhengze/internal/consts"
-	"zhengze/internal/utils"
 )
 
 var Base = &base{}

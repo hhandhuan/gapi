@@ -2,10 +2,10 @@ package utils
 
 import (
 	"fmt"
+	"gapi/pkg/conf"
+	"gapi/pkg/consts"
 	"log"
 	"net/http"
-	"zhengze/pkg/conf"
-	"zhengze/pkg/consts"
 
 	"github.com/gin-gonic/gin"
 )

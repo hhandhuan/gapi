@@ -1,9 +1,9 @@
 package service
 
 import (
-	"zhengze/internal/consts"
-	"zhengze/internal/model"
-	"zhengze/pkg/conf"
+	"gapi/internal/consts"
+	"gapi/internal/model"
+	"gapi/pkg/conf"
 
 	"github.com/gin-gonic/gin"
 )
