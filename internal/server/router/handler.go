@@ -27,7 +27,7 @@ func token() gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set(consts.JwtSubKey, claim.Subject)
+		ctx.Set(consts.JwtClaimKey, claim)
 		ctx.Next()
 	}
 }

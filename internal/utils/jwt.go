@@ -3,9 +3,8 @@ package utils
 import (
 	"errors"
 	"gapi/pkg/conf"
-	"time"
-
 	"github.com/golang-jwt/jwt/v4"
+	"time"
 )
 
 type Jwt struct {
@@ -20,6 +19,7 @@ func (j *Jwt) CreateToken(sub string) (string, error) {
 	obj := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
 		Issuer:    j.conf.Issuer,
 		Subject:   sub,
+		ID:        NewUUID(),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(j.conf.Ttl) * time.Second)),
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 	})

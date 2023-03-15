@@ -1,6 +1,6 @@
 package consts
 
 const (
-	JwtSubKey = "uid"
+	JwtClaimKey       = "claim"
+	BlockListCacheKey = "block-token-list"
 )
-

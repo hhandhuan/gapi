@@ -39,9 +39,7 @@ func (s *userService) HandleLogin(req *entity.UserLoginRequest) (res *gin.H, err
 		return nil, usernameOrPasswordError
 	}
 
-	jwt := utils.NewJwt(s.context.config.Jwt)
-
-	token, err := jwt.CreateToken(strconv.Itoa(int(user.ID)))
+	token, err := utils.NewJwt(s.context.config.Jwt).CreateToken(strconv.Itoa(int(user.ID)))
 	if err != nil {
 		return nil, userLoginError
 	}

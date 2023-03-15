@@ -4,8 +4,8 @@ import (
 	"gapi/internal/consts"
 	"gapi/internal/model"
 	"gapi/pkg/conf"
-
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type contextService struct {
@@ -20,13 +20,13 @@ func NewContextService(ctx *gin.Context) *contextService {
 	}
 }
 
-func (s *contextService) getJwtSub() string {
-	uid, _ := s.context.Get(consts.JwtSubKey)
-	return uid.(string)
+func (s *contextService) getJwtClaim() *jwt.RegisteredClaims {
+	claim, _ := s.context.Get(consts.JwtClaimKey)
+	return claim.(*jwt.RegisteredClaims)
 }
 
 func (s *contextService) currUser() *model.Users {
 	var user *model.Users
-	model.User().Where("id", s.getJwtSub()).Limit(1).Find(&user)
+	model.User().Where("id", s.getJwtClaim().Subject).Limit(1).Find(&user)
 	return user
 }
