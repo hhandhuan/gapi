@@ -22,6 +22,35 @@ type userService struct {
 	context *contextService
 }
 
+// HandleRegister 处理用户注册
+func (s *userService) HandleRegister(req *entity.UserRegisterRequest) error {
+	var user *model.Users
+	err := model.User().Where("username = ?", req.Username).Limit(1).Find(&user).Error
+	if err != nil {
+		return errors.New("user register error")
+	}
+
+	if !user.IsEmpty() {
+		return errors.New("username already exists")
+	}
+
+	password, err := utils.GenerateFromPassword(req.Password)
+	if err != nil {
+		return errors.New("user register error")
+	}
+
+	err = model.User().Create(map[string]interface{}{
+		"username": req.Username,
+		"password": password,
+	}).Error
+
+	if err != nil {
+		return errors.New("user register error")
+	}
+
+	return nil
+}
+
 // HandleLogin 处理用户登录
 func (s *userService) HandleLogin(req *entity.UserLoginRequest) (res *gin.H, err error) {
 	var user *model.Users
@@ -34,7 +63,7 @@ func (s *userService) HandleLogin(req *entity.UserLoginRequest) (res *gin.H, err
 		return nil, errors.New("username or password error")
 	}
 
-	if utils.MD5(req.Password) != user.Password {
+	if !utils.CompareHashAndPassword(req.Password, user.Password) {
 		return nil, errors.New("username or password error")
 	}
 
@@ -55,11 +84,19 @@ func (s *userService) GetCurrUser() *model.Users {
 
 // HandleLogout 处理用户登录
 func (s *userService) HandleLogout() error {
-	seconds := (*s.context.getJwtClaim().ExpiresAt).Unix() - jwt.NewNumericDate(time.Now()).Unix()
 
+	currTimeUnix := jwt.NewNumericDate(time.Now()).Unix()
+	expiredUnix := (*s.context.getJwtClaim().ExpiresAt).Unix()
+
+	seconds := expiredUnix - currTimeUnix
+	if seconds <= 0 {
+		return nil
+	}
+
+	// 将旧令牌加入到黑名单中
 	cmd := redis.Client.Set(context.Background(), s.context.getJwtClaim().ID, 1, time.Second*time.Duration(seconds))
 	if v, err := cmd.Result(); err != nil || v != "Ok" {
-		return errors.New("server internal error")
+		return errors.New("logout error")
 	}
 
 	return nil

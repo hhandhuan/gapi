@@ -26,10 +26,9 @@ func (h *user) Login(ctx *gin.Context) {
 	data, err := service.NewUserService(ctx).HandleLogin(&request)
 	if err != nil {
 		response.WithCode(consts.ErrInternalCode).WithMsg(err).JsonOutput()
-		return
+	} else {
+		response.WithData(data).JsonOutput()
 	}
-
-	response.WithData(data).JsonOutput()
 }
 
 // CurrUser 获取登录信息
@@ -48,8 +47,26 @@ func (h *user) Logout(ctx *gin.Context) {
 	err := service.NewUserService(ctx).HandleLogout()
 	if err != nil {
 		response.WithCode(consts.ErrInternalCode).WithMsg(err).JsonOutput()
+	} else {
+		response.JsonOutput()
+	}
+}
+
+// Register 用户注册
+func (h *user) Register(ctx *gin.Context) {
+	response := utils.NewResponse(ctx)
+
+	var request entity.UserRegisterRequest
+	err := ctx.ShouldBindJSON(&request)
+	if err != nil {
+		response.WithCode(consts.ErrParamCode).WithMsg(err).JsonOutput()
 		return
 	}
 
-	response.JsonOutput()
+	err = service.NewUserService(ctx).HandleRegister(&request)
+	if err != nil {
+		response.WithCode(consts.ErrInternalCode).WithMsg(err).JsonOutput()
+	} else {
+		response.JsonOutput()
+	}
 }

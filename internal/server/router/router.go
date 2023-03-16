@@ -12,12 +12,12 @@ func RegisterRouter(engine *gin.Engine) {
 	engine.NoMethod(handler.Base.NoMethod)
 
 	group := engine.Group("api")
-	{
-		group.POST("login", handler.User.Login)
-		group.Use(token())
-		{
-			group.GET("curr-user", handler.User.CurrUser)
-			group.POST("logout", handler.User.Logout)
-		}
-	}
+
+	group.POST("login", handler.User.Login)
+	group.POST("register", handler.User.Register)
+
+	group.Use(token())
+	
+	group.POST("logout", handler.User.Logout)
+	group.GET("curr-user", handler.User.CurrUser)
 }

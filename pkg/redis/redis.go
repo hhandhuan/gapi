@@ -16,10 +16,9 @@ func InitClient(conf *conf.Redis) {
 		Addr:     fmt.Sprintf("%s:%d", conf.Host, gconv.Int(conf.Port)),
 		Password: conf.Pass,
 		DB:       conf.DB,
-		PoolSize: 10,
 	})
 	str, err := Client.Ping(context.Background()).Result()
 	if err != nil || str != "PONG" {
-		log.Printf("redis connect ping failed, err: %v", err)
+		log.Fatalf("redis connect ping failed, err: %v", err)
 	}
 }

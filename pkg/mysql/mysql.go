@@ -13,17 +13,15 @@ import (
 var Cli = new(Client)
 
 type Client struct {
-	DB  *gorm.DB
-	Cfg *conf.Mysql
+	DB *gorm.DB
 }
 
 func InitClient(cfg *conf.Mysql) {
-	Cli = &Client{Cfg: cfg}
-	Cli.DB, _ = getConn(cfg)
+	Cli = &Client{DB: getConn(cfg)}
 }
 
-func getConn(c *conf.Mysql) (gdb *gorm.DB, err error) {
-	gdb, err = gorm.Open(mysql.New(mysql.Config{
+func getConn(c *conf.Mysql) *gorm.DB {
+	gdb, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       c.Dns, // DSN data source name
 		DefaultStringSize:         255,   // string 类型字段的默认长度
 		DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
@@ -32,25 +30,25 @@ func getConn(c *conf.Mysql) (gdb *gorm.DB, err error) {
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{
 		Logger:                 gormDefaultLogger.Default.LogMode(gormDefaultLogger.Info),
-		SkipDefaultTransaction: false,
+		SkipDefaultTransaction: true,
 	})
 
 	if err != nil {
-		log.Printf("conn mysql client error: %v", err)
-		return
+		log.Fatalf("conn mysql client error: %v", err)
+		return nil
 	}
 
 	db, err := gdb.DB()
 	if err != nil {
-		log.Printf("conn mysql error: %v", err)
-		return
+		log.Fatalf("conn mysql error: %v", err)
+		return nil
 	}
 
 	db.SetMaxIdleConns(c.MaxIdleConns)
-	db.SetConnMaxIdleTime(time.Second * time.Duration(c.ConnMaxIdleTime))
-
 	db.SetMaxOpenConns(c.MaxOpenConns)
+
+	db.SetConnMaxIdleTime(time.Second * time.Duration(c.ConnMaxIdleTime))
 	db.SetConnMaxLifetime(time.Second * time.Duration(c.ConnMaxLifetime))
 
-	return
+	return gdb
 }
