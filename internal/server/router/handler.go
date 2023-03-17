@@ -15,7 +15,7 @@ func token() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		response := utils.NewResponse(ctx)
 
-		// 请求头解析令牌
+		// 解析令牌
 		parts := strings.Split(ctx.Request.Header.Get("Authorization"), " ")
 		if len(parts) <= 1 || parts[0] != "Bearer" {
 			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoRouteErr).JsonOutput()
@@ -23,7 +23,7 @@ func token() gin.HandlerFunc {
 			return
 		}
 
-		// 解析令牌
+		// 解析令牌对象
 		claim, err := utils.NewJwt(conf.GetConfig().Jwt).ParseJwtToken(parts[1])
 		if err != nil {
 			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoAuthFailedErr).JsonOutput()

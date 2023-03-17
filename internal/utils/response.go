@@ -28,8 +28,8 @@ func (res *Result) String() string {
 	return fmt.Sprintf("response result: %#v", res.jsonFormat())
 }
 
-func NewResponse(context *gin.Context) *Response {
-	return &Response{context: context, result: &Result{Code: 0, Msg: "ok", Data: nil}}
+func NewResponse(ctx *gin.Context) *Response {
+	return &Response{context: ctx, result: &Result{Code: 0, Msg: "ok", Data: nil}}
 }
 
 type Response struct {

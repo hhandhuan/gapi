@@ -7,7 +7,7 @@ import (
 )
 
 type Users struct {
-	BaseModel
+	Base
 	Username string `gorm:"column:username" json:"username"`
 	Password string `gorm:"column:password" json:"-"`
 }

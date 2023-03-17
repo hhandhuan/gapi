@@ -30,7 +30,7 @@ func (s *userService) HandleRegister(req *entity.UserRegisterRequest) error {
 		return errors.New("user register error")
 	}
 
-	if !user.IsEmpty() {
+	if !user.IsEmpty() && !user.IsDelete() {
 		return errors.New("username already exists")
 	}
 
@@ -39,11 +39,7 @@ func (s *userService) HandleRegister(req *entity.UserRegisterRequest) error {
 		return errors.New("user register error")
 	}
 
-	err = model.User().Create(map[string]interface{}{
-		"username": req.Username,
-		"password": password,
-	}).Error
-
+	err = model.User().Create(&model.Users{Username: req.Username, Password: password}).Error
 	if err != nil {
 		return errors.New("user register error")
 	}
@@ -54,12 +50,12 @@ func (s *userService) HandleRegister(req *entity.UserRegisterRequest) error {
 // HandleLogin 处理用户登录
 func (s *userService) HandleLogin(req *entity.UserLoginRequest) (res *gin.H, err error) {
 	var user *model.Users
-	err = model.User().Where("username", req.Username).Scopes(model.UnTrash).Limit(1).Find(&user).Error
+	err = model.User().Where("username", req.Username).Limit(1).Find(&user).Error
 	if err != nil {
 		return nil, err
 	}
 
-	if user.ID <= 0 {
+	if user.IsDelete() {
 		return nil, errors.New("username or password error")
 	}
 
