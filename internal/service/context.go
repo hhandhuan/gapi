@@ -9,24 +9,25 @@ import (
 )
 
 type contextService struct {
-	context *gin.Context
-	config  *conf.Config
+	context  *gin.Context
+	config   *conf.Config
+	jwtClaim *jwt.RegisteredClaims
 }
 
 func NewContextService(ctx *gin.Context) *contextService {
-	return &contextService{
+	context := &contextService{
 		context: ctx,
 		config:  conf.GetConfig(),
 	}
-}
+	if claim, _ := ctx.Get(consts.JwtClaimKey); claim != nil {
+		context.jwtClaim = claim.(*jwt.RegisteredClaims)
+	}
 
-func (s *contextService) getJwtClaim() *jwt.RegisteredClaims {
-	claim, _ := s.context.Get(consts.JwtClaimKey)
-	return claim.(*jwt.RegisteredClaims)
+	return context
 }
 
 func (s *contextService) currUser() *model.Users {
 	var user *model.Users
-	model.User().Where("id", s.getJwtClaim().Subject).Limit(1).Find(&user)
+	model.User().Where("id", s.jwtClaim.Subject).Limit(1).Find(&user)
 	return user
 }

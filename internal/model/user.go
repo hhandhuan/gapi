@@ -8,11 +8,10 @@ import (
 
 type Users struct {
 	BaseModel
-	Username    string `gorm:"column:username" json:"username"`
-	Password    string `gorm:"column:password" json:"-"`
-	AccessToken string `gorm:"column:access_token" json:"-"`
+	Username string `gorm:"column:username" json:"username"`
+	Password string `gorm:"column:password" json:"-"`
 }
 
 func User() *gorm.DB {
-	return mysql.Cli.DB.Model(&Users{})
+	return mysql.DB.Model(&Users{})
 }

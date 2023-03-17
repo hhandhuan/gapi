@@ -10,14 +10,10 @@ import (
 	gormDefaultLogger "gorm.io/gorm/logger"
 )
 
-var Cli = new(Client)
-
-type Client struct {
-	DB *gorm.DB
-}
+var DB *gorm.DB
 
 func InitClient(cfg *conf.Mysql) {
-	Cli = &Client{DB: getConn(cfg)}
+	DB = getConn(cfg)
 }
 
 func getConn(c *conf.Mysql) *gorm.DB {

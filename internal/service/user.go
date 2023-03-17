@@ -84,17 +84,18 @@ func (s *userService) GetCurrUser() *model.Users {
 
 // HandleLogout 处理用户登录
 func (s *userService) HandleLogout() error {
-
+	expiredUnix := s.context.jwtClaim.ExpiresAt.Unix()
 	currTimeUnix := jwt.NewNumericDate(time.Now()).Unix()
-	expiredUnix := (*s.context.getJwtClaim().ExpiresAt).Unix()
 
 	seconds := expiredUnix - currTimeUnix
 	if seconds <= 0 {
 		return nil
 	}
 
+	// 令牌 ID 对应默认值
+	defaultVal := 1
 	// 将旧令牌加入到黑名单中
-	cmd := redis.Client.Set(context.Background(), s.context.getJwtClaim().ID, 1, time.Second*time.Duration(seconds))
+	cmd := redis.Client.Set(context.Background(), s.context.jwtClaim.ID, defaultVal, time.Second*time.Duration(seconds))
 	if v, err := cmd.Result(); err != nil || v != "Ok" {
 		return errors.New("logout error")
 	}

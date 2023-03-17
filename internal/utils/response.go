@@ -7,6 +7,7 @@ import (
 	"gapi/pkg/consts"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +18,14 @@ type Result struct {
 	Data interface{} `json:"data"`
 }
 
-func (result *Result) String() string {
-	by, _ := json.Marshal(result)
-	return fmt.Sprintf("%#v", string(by))
+// format 格式化去掉 json \ 和 " 字符 方便阅读数据
+func (res *Result) jsonFormat() string {
+	by, _ := json.Marshal(res)
+	return strings.ReplaceAll(strings.ReplaceAll(string(by), "\\", ""), "\"", "")
+}
+
+func (res *Result) String() string {
+	return fmt.Sprintf("response result: %#v", res.jsonFormat())
 }
 
 func NewResponse(context *gin.Context) *Response {
