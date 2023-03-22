@@ -5,8 +5,8 @@ import (
 	"gapi/internal/entity"
 	"gapi/internal/service"
 	"gapi/internal/utils"
-
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 var User = &user{}
@@ -19,6 +19,12 @@ func (h *user) Register(ctx *gin.Context) {
 
 	var request entity.UserRegisterRequest
 	err := ctx.ShouldBindJSON(&request)
+	if err != nil {
+		response.WithCode(consts.ErrParamCode).WithMsg(err).JsonOutput()
+		return
+	}
+
+	err = validator.New().Struct(&request)
 	if err != nil {
 		response.WithCode(consts.ErrParamCode).WithMsg(err).JsonOutput()
 		return
@@ -43,6 +49,12 @@ func (h *user) Login(ctx *gin.Context) {
 		return
 	}
 
+	err = validator.New().Struct(&request)
+	if err != nil {
+		response.WithCode(consts.ErrParamCode).WithMsg(err).JsonOutput()
+		return
+	}
+
 	data, err := service.NewUserService(ctx).HandleLogin(&request)
 	if err != nil {
 		response.WithCode(consts.ErrInternalCode).WithMsg(err).JsonOutput()
@@ -60,7 +72,7 @@ func (h *user) CurrUser(ctx *gin.Context) {
 	response.WithData(currUser).JsonOutput()
 }
 
-// Logout 获取登录信息
+// Logout 退出登录
 func (h *user) Logout(ctx *gin.Context) {
 	response := utils.NewResponse(ctx)
 

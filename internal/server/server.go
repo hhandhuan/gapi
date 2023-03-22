@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"gapi/internal/server/router"
 	"gapi/pkg/conf"
 	"net/http"
@@ -14,12 +15,18 @@ type server struct {
 }
 
 func NewServer() *server {
-	gin.SetMode(conf.GetConfig().System.Env)
+	config := conf.GetConfig()
+
+	gin.SetMode(config.System.Env)
 
 	engine := gin.New()
+
 	router.RegisterRouter(engine)
 
-	httpServer := &http.Server{Addr: ":8080", Handler: engine}
+	httpServer := &http.Server{
+		Addr:    fmt.Sprintf(":%s", config.System.Addr),
+		Handler: engine,
+	}
 
 	return &server{server: httpServer}
 }
