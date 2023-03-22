@@ -3,8 +3,9 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	inc "gapi/internal/consts"
 	"gapi/pkg/conf"
-	"gapi/pkg/consts"
+	outc "gapi/pkg/consts"
 	"log"
 	"net/http"
 	"strings"
@@ -29,7 +30,7 @@ func (res *Result) String() string {
 }
 
 func NewResponse(ctx *gin.Context) *Response {
-	return &Response{context: ctx, result: &Result{Code: 0, Msg: "ok", Data: nil}}
+	return &Response{context: ctx, result: &Result{Code: inc.OkCode, Msg: "ok", Data: nil}}
 }
 
 type Response struct {
@@ -60,7 +61,7 @@ func (res *Response) WithData(data interface{}) *Response {
 }
 
 func (res *Response) debugPrint() {
-	if conf.GetConfig().System.Env == consts.DebugMode {
+	if conf.GetConfig().System.Env == outc.DebugMode {
 		log.Println(res.result)
 	}
 }
