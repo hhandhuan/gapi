@@ -3,21 +3,12 @@ package main
 import (
 	"context"
 	"gapi/internal/server"
-	"gapi/pkg/conf"
 	"gapi/pkg/consts"
-	"gapi/pkg/mysql"
-	"gapi/pkg/redis"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
-
-func init() {
-	config := conf.GetConfig()
-	mysql.InitClient(config.Mysql)
-	redis.InitClient(config.Redis)
-}
 
 func main() {
 	svr := server.NewServer()

@@ -91,7 +91,7 @@ func (s *userService) HandleLogout() error {
 	// 令牌 ID 对应默认值
 	defaultVal := 1
 	// 将旧令牌加入到黑名单中
-	cmd := redis.Client.Set(context.Background(), s.context.jwtClaim.ID, defaultVal, time.Second*time.Duration(seconds))
+	cmd := redis.DB.Set(context.Background(), s.context.jwtClaim.ID, defaultVal, time.Second*time.Duration(seconds))
 	if v, err := cmd.Result(); err != nil || v != "Ok" {
 		return errors.New("logout error")
 	}

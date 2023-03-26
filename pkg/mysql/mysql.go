@@ -12,8 +12,8 @@ import (
 
 var DB *gorm.DB
 
-func InitClient(cfg *conf.Mysql) {
-	DB = getConn(cfg)
+func init() {
+	DB = getConn(conf.GetConfig().Mysql)
 }
 
 func getConn(c *conf.Mysql) *gorm.DB {
