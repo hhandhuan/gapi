@@ -15,20 +15,18 @@ type server struct {
 }
 
 func NewServer() *server {
-	config := conf.GetConfig()
-
-	gin.SetMode(config.System.Env)
+	gin.SetMode(conf.GetConfig().System.Env)
 
 	engine := gin.New()
 
 	router.RegisterRouter(engine)
 
-	httpServer := &http.Server{
-		Addr:    fmt.Sprintf(":%s", config.System.Addr),
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", conf.GetConfig().System.Addr),
 		Handler: engine,
 	}
 
-	return &server{server: httpServer}
+	return &server{server: srv}
 }
 
 // Init 初始化服务
@@ -36,8 +34,10 @@ func (s *server) init() {
 }
 
 // Run 运行服务
-func (s *server) Run() error {
-	return s.server.ListenAndServe()
+func (s *server) Run() {
+	go func() {
+		s.server.ListenAndServe()
+	}()
 }
 
 // Stop 停止服务

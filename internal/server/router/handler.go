@@ -29,7 +29,7 @@ func token() gin.HandlerFunc {
 			return
 		}
 
-		val := redis.DB.Get(context.Background(), claim.ID).Val()
+		val := redis.GetInstance().Get(context.Background(), claim.ID).Val()
 		if len(val) > 0 {
 			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoAuthFailedErr).JsonOutput()
 			ctx.Abort()

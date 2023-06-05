@@ -3,7 +3,7 @@ package consts
 import "time"
 
 const (
-	ServerShutdownWaitTime = time.Second * 5 // 5s
+	ServerShutdownWaitTime = time.Second * 1 // 5s
 	DebugMode              = "debug"
 	TestMode               = "test"
 	ReleaseMode            = "release"

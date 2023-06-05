@@ -13,5 +13,9 @@ type Users struct {
 }
 
 func User() *gorm.DB {
-	return mysql.DB.Model(&Users{})
+	return mysql.GetInstance().Model(&Users{})
+}
+
+func (u *Users) GetTableName() string {
+	return "users"
 }

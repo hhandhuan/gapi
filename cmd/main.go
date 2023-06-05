@@ -3,37 +3,43 @@ package main
 import (
 	"context"
 	"gapi/internal/server"
-	"gapi/pkg/consts"
-	"log"
+	"gapi/pkg/conf"
+	"gapi/pkg/logger"
+	"gapi/pkg/mysql"
+	"gapi/pkg/redis"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
-func main() {
-	svr := server.NewServer()
+func init() {
+	config := conf.Initialize()
+	logger.Initialize(config.Logger)
+	mysql.Initialize(config.Mysql)
+	redis.Initialize(config.Redis)
+}
 
-	go func() {
-		if err := svr.Run(); err != nil {
-			log.Printf("server start error: %v", err)
-		}
-	}()
+func main() {
+	httpServer := server.NewServer()
+
+	httpServer.Run()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
-	ctx, cancel := context.WithTimeout(context.Background(), consts.ServerShutdownWaitTime)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	if err := svr.Stop(ctx); err != nil {
-		log.Println("stop server error: ", err)
+	err := httpServer.Stop(ctx)
+	if err != nil {
+		logger.GetInstance().Error().Err(err)
 	}
 
 	select {
 	case <-ctx.Done():
-		log.Println("timeout of 5 seconds.")
+		logger.GetInstance().Info().Msg("api service is down")
+		return
 	}
-
-	log.Println("server exiting")
 }

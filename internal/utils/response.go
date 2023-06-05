@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	inc "gapi/internal/consts"
-	"gapi/pkg/conf"
-	outc "gapi/pkg/consts"
 	"log"
 	"net/http"
 	"strings"
@@ -29,13 +27,19 @@ func (res *Result) String() string {
 	return fmt.Sprintf("response result: %#v", res.jsonFormat())
 }
 
+type Response struct {
+	result  *Result
+	context *gin.Context
+	debug   bool
+}
+
 func NewResponse(ctx *gin.Context) *Response {
 	return &Response{context: ctx, result: &Result{Code: inc.OkCode, Msg: "ok", Data: nil}}
 }
 
-type Response struct {
-	result  *Result
-	context *gin.Context
+func (res *Response) Debug(ok bool) *Response {
+	res.debug = ok
+	return res
 }
 
 func (res *Response) WithCode(code int) *Response {
@@ -60,13 +64,9 @@ func (res *Response) WithData(data interface{}) *Response {
 	return res
 }
 
-func (res *Response) debugPrint() {
-	if conf.GetConfig().System.Env == outc.DebugMode {
+func (res *Response) JsonOutput() {
+	if res.debug {
 		log.Println(res.result)
 	}
-}
-
-func (res *Response) JsonOutput() {
-	res.debugPrint()
 	res.context.JSON(http.StatusOK, res.result)
 }

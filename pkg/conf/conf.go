@@ -33,31 +33,42 @@ type System struct {
 	Addr string `yaml:"addr"`
 }
 
+type Logger struct {
+	Path       string `yaml:"path"`
+	Level      int    `yaml:"level"`
+	MaxSize    int    `yaml:"maxSize"`
+	MaxBackups int    `yaml:"maxBackups"`
+	MaxAge     int    `yaml:"maxAge"`
+	Compress   bool   `yaml:"compress"`
+}
+
 type Config struct {
 	System *System `yaml:"system"`
 	Mysql  *Mysql  `yaml:"mysql"`
 	Redis  *Redis  `yaml:"redis"`
 	Jwt    *Jwt    `yaml:"jwt"`
+	Logger *Logger `yaml:"logger"`
 }
 
 var (
-	config = new(Config)
+	conf = new(Config)
+	path = flag.String("cfg", "./config/config.yaml", "config file path")
 )
 
-var (
-	cPath = flag.String("cfg", "./config/config.yaml", "config file path")
-)
-
-func init() {
+func Initialize() *Config {
 	flag.Parse()
 	var buf []byte
-	buf, err := ioutil.ReadFile(*cPath)
+	buf, err := ioutil.ReadFile(*path)
 	if err != nil {
 		log.Fatalf("read file error: %v", err)
 	}
-	err = yaml.Unmarshal(buf, config)
+	err = yaml.Unmarshal(buf, conf)
+	if err != nil {
+		log.Fatalf("read file error: %v", err)
+	}
+	return conf
 }
 
 func GetConfig() *Config {
-	return config
+	return conf
 }
