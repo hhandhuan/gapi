@@ -1,6 +1,7 @@
 system:
   env: debug
   addr: 8081
+  shutdownWaitTime: 5
 mysql:
   dns: root:@(127.0.0.1:3306)/lebron?charset=utf8mb4&parseTime=True&loc=Local
   maxIdleConns: 30

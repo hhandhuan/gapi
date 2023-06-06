@@ -29,7 +29,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(conf.GetConfig().System.ShutdownWaitTime))
 	defer cancel()
 
 	err := httpServer.Stop(ctx)
