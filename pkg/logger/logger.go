@@ -35,7 +35,7 @@ func Initialize(config *conf.Logger) {
 	}
 
 	fileLogger := &lumberjack.Logger{
-		Filename:   "./log/api.log",
+		Filename:   config.Path,
 		MaxSize:    config.MaxSize, // 5M
 		MaxBackups: config.MaxBackups,
 		MaxAge:     config.MaxAge,

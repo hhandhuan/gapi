@@ -17,7 +17,7 @@ func token() gin.HandlerFunc {
 
 		parts := strings.Split(ctx.Request.Header.Get("Authorization"), " ")
 		if len(parts) <= 1 || parts[0] != "Bearer" {
-			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoRouteErr).JsonOutput()
+			response.WithCode(consts.ErrAuthCode).WithMsg(consts.NoAuthFailedErr).JsonOutput()
 			ctx.Abort()
 			return
 		}
